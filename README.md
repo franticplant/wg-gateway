@@ -96,6 +96,22 @@ Releases are built from `v*` tags: multi-arch images (`linux/amd64`,
 `linux/arm64`) on GHCR with SBOM and provenance attestation, plus static
 binaries and checksums attached to the GitHub release.
 
+## Verifying releases
+
+Release images and binaries carry
+[GitHub build provenance attestations](https://docs.github.com/actions/security-guides/using-artifact-attestations-to-establish-provenance-for-builds),
+signed by the release workflow. Check that what you run was built from this
+repository by that workflow:
+
+```sh
+# container image
+gh attestation verify oci://ghcr.io/franticplant/wg-gateway:latest \
+  --repo franticplant/wg-gateway
+
+# downloaded binary
+gh attestation verify wg-gateway-linux-amd64 --repo franticplant/wg-gateway
+```
+
 ## License
 
 MIT
