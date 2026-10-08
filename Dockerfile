@@ -29,6 +29,7 @@ RUN CGO_ENABLED=0 GOOS=$TARGETOS GOARCH=$TARGETARCH \
 
 FROM alpine:3.24 AS alpine
 COPY --from=build /out/wg-gateway /usr/local/bin/wg-gateway
+COPY LICENSE THIRD_PARTY_NOTICES.txt /licenses/
 USER 65532:65532
 EXPOSE 51820/udp
 ENTRYPOINT ["/usr/local/bin/wg-gateway"]
@@ -46,12 +47,14 @@ RUN microdnf install -y --installroot /rootfs --releasever 10 \
 FROM scratch AS ubi
 COPY --from=ubi-rootfs /rootfs/ /
 COPY --from=build /out/wg-gateway /usr/local/bin/wg-gateway
+COPY LICENSE THIRD_PARTY_NOTICES.txt /licenses/
 USER 65532:65532
 EXPOSE 51820/udp
 ENTRYPOINT ["/usr/local/bin/wg-gateway"]
 
 FROM registry.access.redhat.com/ubi10/ubi-minimal:10.2 AS ubi-minimal
 COPY --from=build /out/wg-gateway /usr/local/bin/wg-gateway
+COPY LICENSE THIRD_PARTY_NOTICES.txt /licenses/
 USER 65532:65532
 EXPOSE 51820/udp
 ENTRYPOINT ["/usr/local/bin/wg-gateway"]
@@ -59,6 +62,7 @@ ENTRYPOINT ["/usr/local/bin/wg-gateway"]
 # Static binary, no TLS or shell needed: an empty image is enough.
 FROM scratch AS scratch
 COPY --from=build /out/wg-gateway /wg-gateway
+COPY LICENSE THIRD_PARTY_NOTICES.txt /licenses/
 USER 65532:65532
 EXPOSE 51820/udp
 ENTRYPOINT ["/wg-gateway"]

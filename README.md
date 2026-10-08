@@ -128,4 +128,11 @@ gh attestation verify wg-gateway-linux-amd64 --repo franticplant/wg-gateway
 
 ## License
 
-MIT
+MIT, see [LICENSE](LICENSE). Third-party licenses (wireguard-go: MIT; gVisor
+and google/btree: Apache-2.0; golang.org/x/*: BSD-3-Clause) are in
+[THIRD_PARTY_NOTICES.txt](THIRD_PARTY_NOTICES.txt) and shipped in every image
+under `/licenses`. The Alpine and Red Hat UBI base layers remain under their own
+licenses.
+
+WireGuard is a registered trademark of Jason A. Donenfeld. This project is not
+affiliated with or endorsed by the WireGuard project.

@@ -92,7 +92,9 @@ jobs:
         with:
           path: dist
           merge-multiple: true
-      - run: cd dist && sha256sum wg-gateway-* > SHA256SUMS
+      - uses: actions/checkout@v4
+      - run: cp LICENSE THIRD_PARTY_NOTICES.txt dist/
+      - run: cd dist && sha256sum wg-gateway-* LICENSE THIRD_PARTY_NOTICES.txt > SHA256SUMS
       - env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
