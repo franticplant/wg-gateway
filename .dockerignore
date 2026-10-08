@@ -1,0 +1,6 @@
+.git
+.github
+server.env
+*.log
+wg-gateway
+wg-gateway.new

@@ -1,0 +1,4 @@
+server.env
+wg-gateway
+wg-gateway.new
+*.log
