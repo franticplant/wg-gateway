@@ -7,7 +7,7 @@
 #   ubi          Red Hat UBI 10 rootfs, no shell and no package manager
 #   ubi-minimal  Red Hat UBI 10 minimal (shell + microdnf)
 
-FROM --platform=$BUILDPLATFORM golang:1.26-alpine AS build
+FROM --platform=$BUILDPLATFORM golang:1.27-alpine AS build
 
 ARG TARGETOS=linux
 ARG TARGETARCH
