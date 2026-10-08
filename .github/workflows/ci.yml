@@ -12,8 +12,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
         with:
           go-version-file: go.mod
       - run: test -z "$(gofmt -l .)"
@@ -33,16 +33,16 @@ jobs:
       matrix:
         target: [scratch, alpine, ubi, ubi-minimal]
     steps:
-      - uses: actions/checkout@v4
-      - uses: docker/setup-buildx-action@v3
-      - uses: docker/build-push-action@v6
+      - uses: actions/checkout@v7
+      - uses: docker/setup-buildx-action@v4
+      - uses: docker/build-push-action@v7
         with:
           context: .
           target: ${{ matrix.target }}
           load: true
           pull: true
           tags: wg-gateway:${{ matrix.target }}
-      - uses: aquasecurity/trivy-action@0.33.1
+      - uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: wg-gateway:${{ matrix.target }}
           severity: CRITICAL,HIGH
