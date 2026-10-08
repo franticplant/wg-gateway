@@ -16,6 +16,14 @@ env:
 jobs:
   image:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { target: scratch,     suffix: "",             rolling: latest }
+          - { target: alpine,      suffix: "-alpine",      rolling: alpine }
+          - { target: ubi,         suffix: "-ubi",         rolling: ubi }
+          - { target: ubi-minimal, suffix: "-ubi-minimal", rolling: ubi-minimal }
     steps:
       - uses: actions/checkout@v4
       - uses: docker/setup-qemu-action@v3
@@ -29,16 +37,19 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.IMAGE }}
+          flavor: latest=false
           tags: |
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=raw,value=latest
+            type=semver,pattern={{version}},suffix=${{ matrix.suffix }}
+            type=semver,pattern={{major}}.{{minor}},suffix=${{ matrix.suffix }}
+            type=raw,value=${{ matrix.rolling }}
       - id: push
         uses: docker/build-push-action@v6
         with:
           context: .
+          target: ${{ matrix.target }}
           platforms: linux/amd64,linux/arm64
           push: true
+          pull: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: VERSION=${{ github.ref_name }}

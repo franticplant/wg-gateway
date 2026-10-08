@@ -41,6 +41,19 @@ podman run -d --name wg-gateway \
 
 (`docker` works the same way.)
 
+### Image variants
+
+All variants contain the same static binary, run as UID 65532, and are
+published for `linux/amd64` and `linux/arm64`. Rolling tags are rebuilt weekly
+to pick up base-image fixes; versioned tags look like `1.2.3-alpine`.
+
+| Tag           | Base                      | Shell / package manager | Use it for                    |
+| ------------- | ------------------------- | ----------------------- | ----------------------------- |
+| `latest`      | `scratch`                 | none                    | default, smallest (~6 MB)     |
+| `alpine`      | Alpine                    | `sh`, `apk`             | debugging (~14 MB)            |
+| `ubi`         | Red Hat UBI 10 (RPM-based)| none                    | RHEL / OpenShift (~13 MB)     |
+| `ubi-minimal` | Red Hat UBI 10 minimal    | `bash`, `microdnf`      | RHEL / OpenShift debugging    |
+
 Client configuration:
 
 ```ini
@@ -82,18 +95,19 @@ Open `51820/udp` in your host firewall, restricted to the client if you can.
   also means DNS must use a public resolver such as `1.1.1.1`.
 - **IPv4 only.** IPv6 packets are dropped rather than leaking outside the
   tunnel. ICMP (ping) is not supported.
-- The container image is `FROM scratch`, runs as UID 65532, and has no shell.
+- The default image is `FROM scratch`, runs as UID 65532, and has no shell.
+  The `ubi` image has no shell or package manager either.
 
 ## Building
 
 ```sh
 go build -o wg-gateway .
 go test -race ./...        # end-to-end test: in-process WireGuard client
-podman build -t wg-gateway .
+podman build -t wg-gateway .                       # scratch (default)
+podman build --target alpine -t wg-gateway:alpine .  # or ubi, ubi-minimal
 ```
 
-Releases are built from `v*` tags: multi-arch images (`linux/amd64`,
-`linux/arm64`) on GHCR with SBOM and provenance attestation, plus static
+Releases are built from `v*` tags: multi-arch images (all variants) on GHCR with SBOM and provenance attestation, plus static
 binaries and checksums attached to the GitHub release.
 
 ## Verifying releases
