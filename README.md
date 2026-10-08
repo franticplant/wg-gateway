@@ -52,7 +52,7 @@ to pick up base-image fixes; versioned tags look like `1.2.3-alpine`.
 | `latest`      | `scratch`                 | none                    | default, smallest (~6 MB)     |
 | `alpine`      | Alpine                    | `sh`, `apk`             | debugging (~14 MB)            |
 | `ubi`         | Red Hat UBI 10 (RPM-based)| none                    | RHEL / OpenShift (~13 MB)     |
-| `ubi-minimal` | Red Hat UBI 10 minimal    | `bash`, `microdnf`      | RHEL / OpenShift debugging    |
+| `ubi-micro`   | Red Hat UBI 10 micro      | `bash`, no package mgr  | RHEL / OpenShift (~30 MB)     |
 
 Client configuration:
 
@@ -104,7 +104,7 @@ Open `51820/udp` in your host firewall, restricted to the client if you can.
 go build -o wg-gateway .
 go test -race ./...        # end-to-end test: in-process WireGuard client
 podman build -t wg-gateway .                       # scratch (default)
-podman build --target alpine -t wg-gateway:alpine .  # or ubi, ubi-minimal
+podman build --target alpine -t wg-gateway:alpine .  # or ubi, ubi-micro
 ```
 
 Releases are built from `v*` tags: multi-arch images (all variants) on GHCR with SBOM and provenance attestation, plus static

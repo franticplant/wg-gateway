@@ -23,7 +23,7 @@ jobs:
           - { target: scratch,     suffix: "",             rolling: latest }
           - { target: alpine,      suffix: "-alpine",      rolling: alpine }
           - { target: ubi,         suffix: "-ubi",         rolling: ubi }
-          - { target: ubi-minimal, suffix: "-ubi-minimal", rolling: ubi-minimal }
+          - { target: ubi-micro, suffix: "-ubi-micro", rolling: ubi-micro }
     steps:
       - uses: actions/checkout@v4
       - uses: docker/setup-qemu-action@v3

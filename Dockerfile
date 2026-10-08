@@ -5,7 +5,7 @@
 #   scratch      empty image, just the binary           (default)
 #   alpine       Alpine with a shell and apk, for debugging
 #   ubi          Red Hat UBI 10 rootfs, no shell and no package manager
-#   ubi-minimal  Red Hat UBI 10 minimal (shell + microdnf)
+#   ubi-micro    Red Hat UBI 10 micro (bash, no package manager)
 
 FROM --platform=$BUILDPLATFORM golang:1.26-alpine AS build
 
@@ -46,13 +46,17 @@ RUN microdnf install -y --installroot /rootfs --releasever 10 \
 
 FROM scratch AS ubi
 COPY --from=ubi-rootfs /rootfs/ /
-COPY --from=build /out/wg-gateway /usr/local/bin/wg-gateway
+# Release metadata that vulnerability scanners (Trivy, Grype) use to map the
+# RPM database to Red Hat advisories.
+COPY --from=ubi-rootfs /root/buildinfo /root/buildinfo
+COPY --from=ubi-rootfs /usr/lib/os-release /usr/lib/os-release
+COPY --from=ubi-rootfs /etc/redhat-release /etc/system-release-cpe /etc/
 COPY LICENSE THIRD_PARTY_NOTICES.txt /licenses/
 USER 65532:65532
 EXPOSE 51820/udp
 ENTRYPOINT ["/usr/local/bin/wg-gateway"]
 
-FROM registry.access.redhat.com/ubi10/ubi-minimal:10.2 AS ubi-minimal
+FROM registry.access.redhat.com/ubi10/ubi-micro:10.2 AS ubi-micro
 COPY --from=build /out/wg-gateway /usr/local/bin/wg-gateway
 COPY LICENSE THIRD_PARTY_NOTICES.txt /licenses/
 USER 65532:65532

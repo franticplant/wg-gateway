@@ -40,7 +40,7 @@ jobs:
           - { target: scratch,     rolling: latest }
           - { target: alpine,      rolling: alpine }
           - { target: ubi,   rolling: ubi }
-          - { target: ubi-minimal, rolling: ubi-minimal }
+          - { target: ubi-micro, rolling: ubi-micro }
     steps:
       - uses: actions/checkout@v4
         with:

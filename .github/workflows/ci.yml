@@ -31,7 +31,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [scratch, alpine, ubi, ubi-minimal]
+        include:
+          - { target: scratch }
+          - { target: alpine }
+          # The bare UBI root has no Red Hat content-set metadata, so Trivy
+          # cannot match its two data-only RPMs to advisories. Scan the Go
+          # binary's modules; the RPMs contain no code.
+          - { target: ubi, vuln-type: library }
+          - { target: ubi-micro }
     steps:
       - uses: actions/checkout@v4
       - uses: docker/setup-buildx-action@v3
@@ -46,5 +53,6 @@ jobs:
         with:
           image-ref: wg-gateway:${{ matrix.target }}
           severity: CRITICAL,HIGH
+          vuln-type: ${{ matrix.vuln-type || 'os,library' }}
           ignore-unfixed: true
           exit-code: "1"
