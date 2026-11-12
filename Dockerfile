@@ -56,7 +56,7 @@ USER 65532:65532
 EXPOSE 51820/udp
 ENTRYPOINT ["/usr/local/bin/wg-gateway"]
 
-FROM registry.access.redhat.com/ubi10/ubi-micro:10.2 AS ubi-micro
+FROM registry.access.redhat.com/ubi10/ubi-micro:10.3 AS ubi-micro
 COPY --from=build /out/wg-gateway /usr/local/bin/wg-gateway
 COPY LICENSE THIRD_PARTY_NOTICES.txt /licenses/
 USER 65532:65532
