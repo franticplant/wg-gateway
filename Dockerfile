@@ -36,7 +36,7 @@ ENTRYPOINT ["/usr/local/bin/wg-gateway"]
 
 # Bare UBI: a root filesystem assembled from UBI RPMs (so scanners see the
 # RPM database), but with no shell and no package manager inside.
-FROM registry.access.redhat.com/ubi10/ubi-minimal:10.2 AS ubi-rootfs
+FROM registry.access.redhat.com/ubi10/ubi-minimal:10.3 AS ubi-rootfs
 RUN microdnf install -y --installroot /rootfs --releasever 10 \
         --config /etc/dnf/dnf.conf --noplugins \
         --setopt=cachedir=/var/cache/dnf --setopt=reposdir=/etc/yum.repos.d \
